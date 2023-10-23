@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed } from 'vue'
 
 const message = ref('Hello world')
 const titleClass = ref('title')
@@ -11,11 +11,11 @@ const awesome = ref(true)
 let id = 0
 const newTodo = ref('')
 const todos = ref([
-    { id: id, text: 'Learn Java' },
-    { id: id, text: 'Learn React' },
-    { id: id, text: 'Learn Python' }
+    { id: id, text: 'Learn Java', done: true },
+    { id: id, text: 'Learn React', done: false },
+    { id: id, text: 'Learn Python', done: false }
 ])
-
+const hideCompleted = ref(false)
 
 function increment() {
     counter.count++
@@ -27,6 +27,11 @@ const addTodo = () => {
     todos.value.push({ id: id++, text: newTodo.value })
     newTodo.value = ''
 }
+const filteredTodos = computed(() => {
+    return hideCompleted.value
+        ? todos.value.filter((t) => !t.done)
+        : todos.value
+})
 const removeTodo = (todo) => {
     todos.value = todos.value.filter((t) => t !== todo)
 }
@@ -45,16 +50,24 @@ const removeTodo = (todo) => {
         <input v-model="newTodo">
         <button>Add todo</button>
     </form>
-    <ul v-for="todo in todos" :key="todo.id">
+    <ul v-for="todo in filteredTodos" :key="todo.id">
         <li>
-            {{ todo.text }}
+            <input type="checkbox" v-model="todo.done">
+            <span :class="{ done: todo.done }">{{ todo.text }}</span>
             <button @click="removeTodo(todo)">X</button>
         </li>
     </ul>
+    <button @click="hideCompleted = !hideCompleted">
+        {{ hideCompleted ? 'Show all' : 'Hide completed' }}
+    </button>
 </template>
 
 <style scoped>
 .title {
     color: brown;
+}
+
+.done {
+    text-decoration: line-through;
 }
 </style>
