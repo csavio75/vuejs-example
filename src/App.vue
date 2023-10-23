@@ -5,5 +5,3 @@ import ProductForm from './components/ProductForm.vue';
 <template>
   <ProductForm />
 </template>
-
-<style scoped></style>
