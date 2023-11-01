@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 
 const message = ref('Hello world')
 const titleClass = ref('title')
@@ -16,6 +16,7 @@ const todos = ref([
     { id: id, text: 'Learn Python', done: false }
 ])
 const hideCompleted = ref(false)
+const pElementRef = ref(null)
 
 function increment() {
     counter.count++
@@ -35,6 +36,9 @@ const filteredTodos = computed(() => {
 const removeTodo = (todo) => {
     todos.value = todos.value.filter((t) => t !== todo)
 }
+onMounted(() => {
+    pElementRef.value.textContent = 'mounted!'
+})
 </script>
 
 <template>
@@ -60,6 +64,7 @@ const removeTodo = (todo) => {
     <button @click="hideCompleted = !hideCompleted">
         {{ hideCompleted ? 'Show all' : 'Hide completed' }}
     </button>
+    <p ref="pElementRef">Good Bye</p>
 </template>
 
 <style scoped>
