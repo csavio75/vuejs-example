@@ -1,35 +1,36 @@
-<script setup>
-import { ref, computed } from 'vue';
-
-import ProductForm from './components/ProductForm.vue';
-import GridFilterComponent from './components/GridFilterComponent.vue';
-import ShowModal from './components/ShowModal.vue';
-import NotFound from './components/NotFound.vue';
-import ChildComp from './components/ChildComp.vue';
-
-const routes = {
-  '/': ProductForm,
-  '/grid': GridFilterComponent,
-  '/modal': ShowModal,
-  '/component': ChildComp
-}
-
-const currentPath = ref(window.location.hash)
-
-window.addEventListener('hashchange', () => {
-  currentPath.value = window.location.hash
-})
-
-const currentView = computed(() => {
-  return routes[currentPath.value.slice(1) || '/'] || NotFound
-})
-</script>
-
 <template>
-  <a href="#/">Home</a> |
-  <a href="#/grid">Grid</a> |
-  <a href="#/modal">Modal</a> |
-  <a href="#/component">Component</a> |
-  <a href="#/non-existent-path">Broken Link</a>
-  <component :is="currentView" />
+    <div>
+        <router-link :to="{ name: 'Home' }">Home</router-link> |
+        <router-link :to="{ name: 'Grid' }">Grid</router-link> |
+        <router-link :to="{ name: 'Component' }">Component</router-link> |
+        <router-link :to="{ name: 'Modal' }">Modal</router-link>
+    </div>
+
+    <p>
+        <button @click="stepTo(-1)">Go back 1 step</button>
+        <button @click="stepTo(1)">Go forward 1 step</button>
+
+        <button @click="pushTo('/not-found')">Redirect to "/user/1"</button>
+    </p>
+
+    <router-view />
 </template>
+  
+<script>
+import { useRouter, useRoute } from 'vue-router'
+
+export default {
+    setup() {
+        const router = useRouter()
+        const route = useRoute()
+
+        function stepTo(step) { router.go(step) }
+        function pushTo(route) { router.push(route) }
+
+        return {
+            stepTo,
+            pushTo
+        }
+    }
+}
+</script>
