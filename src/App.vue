@@ -1,31 +1,35 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
-import MyComponent from './components/MyComponent.vue';
 import ProductForm from './components/ProductForm.vue';
-import ChildComp from './components/ChildComp.vue';
 import GridFilterComponent from './components/GridFilterComponent.vue';
-import Modal from './components/Modal.vue';
+import ShowModal from './components/ShowModal.vue';
+import NotFound from './components/NotFound.vue';
+import ChildComp from './components/ChildComp.vue';
 
-const greeting = ref("Hello from parent")
-const childMsg = ref("No child msg yet")
-const showModal = ref(false)
+const routes = {
+  '/': ProductForm,
+  '/grid': GridFilterComponent,
+  '/modal': ShowModal,
+  '/component': ChildComp
+}
+
+const currentPath = ref(window.location.hash)
+
+window.addEventListener('hashchange', () => {
+  currentPath.value = window.location.hash
+})
+
+const currentView = computed(() => {
+  return routes[currentPath.value.slice(1) || '/'] || NotFound
+})
 </script>
 
 <template>
-  <ProductForm />
-  <MyComponent :msg="greeting" @example="(msg) => childMsg = msg" />
-  <p>{{ childMsg }}</p>
-  <ChildComp>{{ greeting }}</ChildComp>
-  <GridFilterComponent />
-  <button id="show-modal" @click="showModal = true">Show Modal</button>
-
-  <Teleport to="body">
-    <!-- use the modal component, pass in the prop -->
-    <modal :show="showModal" @close="showModal = false">
-      <template #header>
-        <h3>custom header</h3>
-      </template>
-    </modal>
-  </Teleport>
+  <a href="#/">Home</a> |
+  <a href="#/grid">Grid</a> |
+  <a href="#/modal">Modal</a> |
+  <a href="#/component">Component</a> |
+  <a href="#/non-existent-path">Broken Link</a>
+  <component :is="currentView" />
 </template>
