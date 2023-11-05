@@ -4,6 +4,7 @@ import { ref } from 'vue';
 import MyComponent from './components/MyComponent.vue';
 import ProductForm from './components/ProductForm.vue';
 import ChildComp from './components/ChildComp.vue';
+import GridFilterComponent from './components/GridFilterComponent.vue';
 
 const greeting = ref("Hello from parent")
 const childMsg = ref("No child msg yet")
@@ -14,4 +15,5 @@ const childMsg = ref("No child msg yet")
   <MyComponent :msg="greeting" @example="(msg) => childMsg = msg" />
   <p>{{ childMsg }}</p>
   <ChildComp>{{ greeting }}</ChildComp>
+  <GridFilterComponent />
 </template>
