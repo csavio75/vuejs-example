@@ -1,9 +1,15 @@
 <script setup>
+import { ref } from 'vue';
+
 import MyComponent from './components/MyComponent.vue';
 import ProductForm from './components/ProductForm.vue';
+
+const greeting = ref("Hello from parent")
+const childMsg = ref("No child msg yet")
 </script>
 
 <template>
   <ProductForm />
-  <MyComponent />
+  <MyComponent :msg="greeting" @example="(msg) => childMsg = msg" />
+  <p>{{ childMsg }}</p>
 </template>
